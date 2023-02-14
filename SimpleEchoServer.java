@@ -4,29 +4,55 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.*;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
-public class SimpleEchoServer {
+public class SimpleEchoServer implements Runnable {
+    private static Socket clientSocket;
+
+    public SimpleEchoServer(Socket clientSocket) {
+        this.clientSocket = clientSocket;
+    } // python에 선언시 self가 있다.
+
+    // 다중 접속을 위한 병렬처리 에코 서버
     public static void main(String[] args) {
-        System.out.println("에코 서버 시작됨");
-        try (ServerSocket serverSocket = new ServerSocket(6000)) {
-            System.out.println("연결 대기중...");
-            Socket clientSocket = serverSocket.accept();
-            System.out.println("클라이언트 연결완료");
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(clientSocket.getInputStream())); //입출력 송수신 버퍼 거치고 거쳐서 br에 담겨 try()를 통해 .close()를 할 필요가 없음
-                PrintWriter pw = new PrintWriter(clientSocket.getOutputStream(), true)) //true : buffer를 자동으로 비워줌
-            {
-                String line;
-                while ((line = br.readLine()) != null) {
-                    System.out.println("클라이언트로 부터 받은 메세지: " + line);
-                    pw.println(line); // 클라이언트로 송신
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+        ExecutorService eService = Executors.newFixedThreadPool(2); // Thread 2 개로 제한
+        System.out.println("다중 접속 에코 서버");
+
+        try (ServerSocket serverSocket = new ServerSocket(20010)) {
+            while (true) {
+                System.out.println("연결 대기중...");
+                clientSocket = serverSocket.accept();
+                SimpleEchoServer tes = new SimpleEchoServer(clientSocket);
+                // new Thread(tes).start();
+                eService.submit(tes);
             }
+        } catch (IOException e) {
+            System.out.println("입출력 예외 발행!");
+
         }
-        catch (IOException ex) {
-            System.out.println("접속 실패");
-        // Handle exceptions;
+        System.out.println("다중 접속 에코 발생");
+        eService.shutdown();
+    }
+
+    @Override
+    public void run() {
+        System.out.println("[" + Thread.currentThread() + "] 쓰레드 : ");
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)
+        ) {
+            String inputLine;
+            while ((inputLine = br.readLine()) != null) {
+                System.out.println("[" + Thread.currentThread() + "] 클라이언트가 보낸 메시지: " + inputLine);
+                out.println(inputLine);
+            }
+            System.out.println("[" + Thread.currentThread() + " 클라이언트가 종료됨");
+        } catch (IOException ex) {
+// Handle exceptions
         }
     }
 }

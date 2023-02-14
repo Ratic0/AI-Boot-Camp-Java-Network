@@ -16,7 +16,7 @@ public class SimpleEchoClient {
             PrintWriter pw = null;
             BufferedReader br = null;
             try {
-                clientSocket = new Socket(localAddress, 6000); //상대방과 송수신시 localAddress를 상대방의 Ip주소로 변경해야됨
+                clientSocket = new Socket("165.246.115.165", 20000); //상대방과 송수신시 localAddress를 상대방의 Ip주소로 변경해야됨
                 pw = new PrintWriter(clientSocket.getOutputStream(), true); // 보내는 버퍼
                 br = new BufferedReader(new InputStreamReader(clientSocket.getInputStream())); // 수신하는 버퍼
                 System.out.println("서버에 연결됨");
