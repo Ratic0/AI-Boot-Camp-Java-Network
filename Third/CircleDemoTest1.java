@@ -14,7 +14,6 @@ class Circle implements Comparable<Circle>{ // 객체를 비교할수 있게 만
     public String toString(){
         return String.format("원의 반지름은" + radius + "입니다");
     }
-
     @Override
     public int compareTo(Circle c) {
 //        Circle c =(Circle)o;
