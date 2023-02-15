@@ -4,7 +4,7 @@ import java.util.concurrent.Executors;
 public class day22_Mission_Thread {
     public static void main(String[] args) {
         int alphabet = 'a';
-        ExecutorService exec = Executors.newCachedThreadPool();
+        ExecutorService exec = Executors.newCachedThreadPool(); // newCachedThreadPool() 1개이상의 쓰레드가 추가되었을 경우 60초 동안 스레드가 아무 작업하지 않으면 해당 스레드를 풀에서 쫓아냄
         Runnable task = () -> {
             try {
                 for (int i = 0; i < 5; i++) {
