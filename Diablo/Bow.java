@@ -1,3 +1,5 @@
+package Diablo;
+
 public class Bow implements WeaponBehavior{
     @Override
     public void useWeapon(){

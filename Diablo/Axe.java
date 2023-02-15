@@ -1,3 +1,5 @@
+package Diablo;
+
 public class Axe implements WeaponBehavior {
     @Override
     public void useWeapon(){

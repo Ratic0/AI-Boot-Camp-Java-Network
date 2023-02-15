@@ -1,3 +1,5 @@
+package Diablo;
+
 public class Sorceress extends Character{
     public Sorceress() {
         hp = 300;
@@ -6,6 +8,7 @@ public class Sorceress extends Character{
 
     @Override
     void info() {
+        System.out.println("체력 : " + hp + "\n지능 : " + mp);
 
     }
 }
