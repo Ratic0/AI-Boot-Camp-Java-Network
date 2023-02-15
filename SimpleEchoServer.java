@@ -20,7 +20,7 @@ public class SimpleEchoServer implements Runnable {
 
     // 다중 접속을 위한 병렬처리 에코 서버
     public static void main(String[] args) {
-        ExecutorService eService = Executors.newFixedThreadPool(2); // Thread 2 개로 제한
+        ExecutorService eService = Executors.newFixedThreadPool(2); // Thread 2 개로 제한 private 생성자로 객체생성이 제한되니 그 내부 static method를 통해 객체 생성
         System.out.println("다중 접속 에코 서버");
 
         try (ServerSocket serverSocket = new ServerSocket(20010)) {
