@@ -41,13 +41,13 @@ public class SimpleEchoServer implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("[" + Thread.currentThread() + "] 쓰레드 : ");
+        System.out.println("[" + Thread.currentThread() + "] 쓰레드 접속: ");
         try (BufferedReader br = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
              PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)
         ) {
             String inputLine;
             while ((inputLine = br.readLine()) != null) {
-                System.out.println("[" + Thread.currentThread() + "] 클라이언트가 보낸 메시지: " + inputLine);
+                System.out.println(clientSocket.getRemoteSocketAddress().toString() + "[" + Thread.currentThread() + "] 클라이언트가 보낸 메시지: " + inputLine);
                 out.println(inputLine);
             }
             System.out.println("[" + Thread.currentThread() + " 클라이언트가 종료됨");
