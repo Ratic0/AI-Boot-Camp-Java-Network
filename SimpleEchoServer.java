@@ -1,12 +1,10 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.StringTokenizer;
 import java.util.concurrent.*;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -23,7 +21,7 @@ public class SimpleEchoServer implements Runnable {
         ExecutorService eService = Executors.newFixedThreadPool(2); // Thread 2 개로 제한 private 생성자로 객체생성이 제한되니 그 내부 static method를 통해 객체 생성
         System.out.println("다중 접속 에코 서버");
 
-        try (ServerSocket serverSocket = new ServerSocket(20010)) {
+        try (ServerSocket serverSocket = new ServerSocket(22022)) {
             while (true) {
                 System.out.println("연결 대기중...");
                 clientSocket = serverSocket.accept();
@@ -43,12 +41,38 @@ public class SimpleEchoServer implements Runnable {
     public void run() {
         System.out.println("[" + Thread.currentThread() + "] 쓰레드 접속: ");
         try (BufferedReader br = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)
+             PrintWriter pw = new PrintWriter(clientSocket.getOutputStream(), true)
         ) {
             String inputLine;
+
             while ((inputLine = br.readLine()) != null) {
                 System.out.println(clientSocket.getRemoteSocketAddress().toString() + "[" + Thread.currentThread() + "] 클라이언트가 보낸 메시지: " + inputLine);
-                out.println(inputLine);
+                StringTokenizer ST = new StringTokenizer(inputLine,"+-*/",true);
+                int result = 0, operand =0;
+                char operator ='+';
+                while(ST.hasMoreTokens()){
+                    String token = ST.nextToken().trim();
+                    if("+-*/".indexOf(token) >= 0){
+                        operator = token.charAt(0);
+                    }else{
+                        operand = Integer.parseInt(token);
+                        switch(operator){
+                            case '+':
+                                result += operand;
+                                break;
+                            case '-':
+                                result -= operand;
+                                break;
+                            case '*':
+                                result *= operand;
+                                break;
+                            case '/':
+                                result /= operand;
+                                break;
+                        }
+                    }
+                }
+                pw.println(inputLine + "="+ result);
             }
             System.out.println("[" + Thread.currentThread() + " 클라이언트가 종료됨");
         } catch (IOException ex) {

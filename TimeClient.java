@@ -4,9 +4,10 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 
 public class TimeClient {
+    // NIO
     // MultiCast Client
     public static void main(String args[]) {
-        System.out.println("멀티 캐스트 타임 클라이언트");
+        System.out.println("NIO 멀티 캐스트 타임 클라이언트");
         try (MulticastSocket socket = new MulticastSocket(10000)) {
             InetAddress group = InetAddress.getByName("224.0.0.147");
             socket.joinGroup(group);
