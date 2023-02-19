@@ -31,5 +31,6 @@ public class day22 {
                 ex.printStackTrace();
 
             }
+
     }
 }
