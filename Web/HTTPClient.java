@@ -7,8 +7,8 @@ import java.net.Socket;
 import java.net.InetAddress;
 
 public class HTTPClient {
-    String A = "abd";
-    A.equals("abd");
+
+
     public HTTPClient() {
         System.out.println("HTTP Client Started");
         try {
